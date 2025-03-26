@@ -65,7 +65,7 @@ body {
         width: 300px;
         border-radius: 50%;
 
-        background-color: var(--theme-accent);
+        background: linear-gradient(var(--theme-accent), var(--theme-accent-dark));
         overflow: hidden;
 
         img {
