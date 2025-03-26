@@ -2,6 +2,8 @@ use axum::{routing::get, Router};
 use maud::{html, Markup};
 use tower_http::services::ServeDir;
 
+mod summary_pane;
+
 #[tokio::main]
 async fn main() {
     let app = Router::new()
@@ -49,9 +51,7 @@ async fn index() -> Markup {
     page(
         PageMetadata::default(),
         html! {
-            h1 {
-                "hello, world!"
-            }
+            (summary_pane::container())
         },
     )
 }
