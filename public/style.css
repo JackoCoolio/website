@@ -100,5 +100,31 @@ body {
 
   #events {
     flex-grow: 1;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    .event {
+      max-width: 600px;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+
+      .timeline {
+        width: 100px;
+        height: 100%;
+        margin-right: 25px;
+
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      .body {
+      }
+    }
   }
 }

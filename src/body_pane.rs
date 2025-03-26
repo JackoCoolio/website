@@ -1,10 +1,17 @@
 use maud::{html, Markup, Render};
 
-const EVENTS: &[Event] = &[Event {
-    title: "example title",
-    date: "1/1/1970",
-    content: "lorem ipsum dolor sit amet",
-}];
+const EVENTS: &[Event] = &[
+    Event {
+        title: "example title",
+        date: "1/1/1970",
+        content: "lorem ipsum dolor sit amet",
+    },
+    Event {
+        title: "example title",
+        date: "1/1/1970",
+        content: "lorem ipsum dolor sit amet",
+    },
+];
 
 pub fn content() -> Markup {
     html! {
@@ -32,9 +39,13 @@ impl Render for Event<'_> {
 
         html! {
             div.event {
-                (title)
-                (date)
-                (content)
+                div.timeline {
+                    span { (date) }
+                }
+                div.body {
+                    h1 { (title) }
+                    p { (content) }
+                }
             }
         }
     }
