@@ -16,8 +16,12 @@ const EVENTS: &[Event] = &[
 pub fn content() -> Markup {
     html! {
         div #events {
-            @for event in EVENTS {
-                (event)
+            table {
+                tbody {
+                    @for event in EVENTS {
+                        (event)
+                    }
+                }
             }
         }
     }
@@ -38,11 +42,11 @@ impl Render for Event<'_> {
         } = self;
 
         html! {
-            div.event {
-                div.timeline {
+            tr.event {
+                td.timeline {
                     span { (date) }
                 }
-                div.body {
+                td.body {
                     h1 { (title) }
                     p { (content) }
                 }
