@@ -2,6 +2,7 @@ use axum::{routing::get, Router};
 use maud::{html, Markup};
 use tower_http::services::ServeDir;
 
+mod body_pane;
 mod summary_pane;
 
 #[tokio::main]
@@ -52,6 +53,7 @@ async fn index() -> Markup {
         PageMetadata::default(),
         html! {
             (summary_pane::container())
+            (body_pane::content())
         },
     )
 }

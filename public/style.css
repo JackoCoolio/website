@@ -6,6 +6,8 @@
 
 body {
   background-color: #f2f2f2;
+  display: flex;
+  flex-flow: row nowrap;
 }
 
 .highlighted {
@@ -45,9 +47,13 @@ body {
 
   font-family: DM Sans;
 
-  #summary {
-    width: 33%;
+  #summary, #events {
     height: 100vh;
+  }
+
+  #summary {
+    width: fit-content;
+    margin: 25px;
 
     display: flex;
     justify-contents: center;
@@ -90,5 +96,9 @@ body {
         }
       }
     }
+  }
+
+  #events {
+    flex-grow: 1;
   }
 }
