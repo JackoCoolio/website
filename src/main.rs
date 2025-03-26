@@ -1,9 +1,12 @@
 use axum::{routing::get, Router};
 use maud::{html, Markup};
+use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(index));
+    let app = Router::new()
+        .route("/", get(index))
+        .fallback_service(ServeDir::new("public"));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
 
@@ -33,6 +36,7 @@ fn page(meta: PageMetadata, inner: Markup) -> Markup {
                 meta name="viewport" content="width=device-width,initial-scale=1";
                 meta name="description" content="Jackson Wambolt's personal website";
                 meta name="theme-color" content="#ffffff"; // TODO: set a real color
+                link rel="stylesheet" href="style.css";
             }
             body {
                 (inner)
