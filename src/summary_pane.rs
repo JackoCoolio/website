@@ -11,16 +11,38 @@ pub fn container() -> Markup {
     }
 }
 
+struct SummaryField(&'static str, &'static str);
+
+const FIELDS: &[SummaryField] = &[
+    SummaryField("is a", "Software Developer"),
+    SummaryField("at", "Epic"),
+    SummaryField("in", "Madison, WI"),
+];
+
+impl maud::Render for SummaryField {
+    fn render(&self) -> Markup {
+        let SummaryField(label, value) = self;
+        html! {
+            li {
+                (label)
+                " "
+                (value)
+                br;
+            }
+        }
+    }
+}
+
 fn content() -> Markup {
     html! {
         div {
             (portrait())
             div.text {
                 h1.name { (highlighted("Jackson Wambolt")) }
-                p {
-                    "Software Developer" br;
-                    "at Epic" br;
-                    "in Madison, WI"
+                ul.fields {
+                    @for field in FIELDS {
+                        (field)
+                    }
                 }
             }
         }
