@@ -8,8 +8,40 @@ body {
   background-color: #f2f2f2;
 }
 
+.highlighted {
+  position: relative;
+
+  > span {
+    position: relative;
+    z-index: 2;
+  }
+
+  --rotate-transform: rotate(-1deg);
+
+  div {
+    position: absolute;
+    top: 0;
+    bottom: 2px;
+    left: -4px;
+    right: -4px;
+    transform: var(--rotate-transform);
+  }
+
+  div.highlight {
+    z-index: 1;
+    background-color: var(--theme-accent);
+  }
+
+  div.shadow {
+    z-index: 0;
+    background-color: var(--theme-accent-dark);
+    transform: var(--rotate-transform) translate(3px, 5px);
+  }
+}
+
 :root {
   --theme-accent: #f0c248;
+  --theme-accent-dark: #F0AE48;
 
   font-family: DM Sans;
 
@@ -49,6 +81,10 @@ body {
       /* name and summary */
       .text {
         margin-top: 20px;
+
+        p {
+          margin-top: 8px;
+        }
       }
     }
   }

@@ -16,7 +16,7 @@ fn content() -> Markup {
         div {
             (portrait())
             div.text {
-                h1.name { "Jackson Wambolt" }
+                h1.name { (highlighted("Jackson Wambolt")) }
                 p {
                     "Software Developer" br;
                     "at Epic" br;
@@ -31,6 +31,16 @@ fn portrait() -> Markup {
     html! {
         div #portrait {
             img src="portrait-transparent.png";
+        }
+    }
+}
+
+fn highlighted(text: &str) -> Markup {
+    html! {
+        span.highlighted {
+            span { (text) }
+            div.highlight {}
+            div.shadow {}
         }
     }
 }
