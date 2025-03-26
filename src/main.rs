@@ -12,8 +12,42 @@ async fn main() {
         .unwrap();
 }
 
-async fn index() -> Markup {
+#[derive(Default)]
+struct PageMetadata {
+    /// The subtitle of the page.
+    subtitle: Option<String>,
+}
+
+fn page(meta: PageMetadata, inner: Markup) -> Markup {
+    let subtitle = meta
+        .subtitle
+        .map(|st| format!(" - {st}"))
+        .unwrap_or("".into());
+
     html! {
-        h1 { "hello, world!" }
+        (maud::DOCTYPE)
+        html lang="en" {
+            head {
+                title { "Jackson Wambolt" (subtitle) }
+                meta charset="utf-8";
+                meta name="viewport" content="width=device-width,initial-scale=1";
+                meta name="description" content="Jackson Wambolt's personal website";
+                meta name="theme-color" content="#ffffff"; // TODO: set a real color
+            }
+            body {
+                (inner)
+            }
+        }
     }
+}
+
+async fn index() -> Markup {
+    page(
+        PageMetadata::default(),
+        html! {
+            h1 {
+                "hello, world!"
+            }
+        },
+    )
 }
