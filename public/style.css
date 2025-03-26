@@ -4,7 +4,13 @@
   margin: 0;
 }
 
+body {
+  background-color: #f2f2f2;
+}
+
 :root {
+  --theme-accent: #f0c248;
+
   font-family: DM Sans;
 
   #summary {
@@ -22,14 +28,22 @@
       flex-flow: column nowrap;
       align-items: center;
 
-      img {
+      div#portrait {
         /* circle */
         width: 300px;
         border-radius: 50%;
 
-        /* disable interaction */
-        pointer-events: none;
-        user-select: none;
+        background-color: var(--theme-accent);
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+
+          /* disable interaction */
+          pointer-events: none;
+          user-select: none;
+        }
       }
 
       /* name and summary */

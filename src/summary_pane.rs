@@ -14,7 +14,7 @@ pub fn container() -> Markup {
 fn content() -> Markup {
     html! {
         div {
-            img #portrait src="portrait.png";
+            (portrait())
             div.text {
                 h1.name { "Jackson Wambolt" }
                 p {
@@ -23,6 +23,14 @@ fn content() -> Markup {
                     "in Madison, WI"
                 }
             }
+        }
+    }
+}
+
+fn portrait() -> Markup {
+    html! {
+        div #portrait {
+            img src="portrait-transparent.png";
         }
     }
 }
