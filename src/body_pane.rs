@@ -1,24 +1,15 @@
-use maud::{html, Markup, Render};
+use maud::{html, Markup, PreEscaped, Render};
 
-const EVENTS: &[Event] = &[
-    Event {
-        title: "example title",
-        date: "1/1/1970",
-        content: "lorem ipsum dolor sit amet",
-    },
-    Event {
-        title: "example title",
-        date: "1/1/1970",
-        content: "lorem ipsum dolor sit amet",
-    },
-];
+use crate::events::{load_events, Event};
 
 pub fn content() -> Markup {
+    let events = load_events();
+
     html! {
         div #events {
             table {
                 tbody {
-                    @for event in EVENTS {
+                    @for event in events {
                         (event)
                     }
                 }
@@ -27,13 +18,7 @@ pub fn content() -> Markup {
     }
 }
 
-struct Event<'a> {
-    title: &'a str,
-    date: &'a str,
-    content: &'a str,
-}
-
-impl Render for Event<'_> {
+impl Render for Event {
     fn render(&self) -> Markup {
         let Event {
             title,
@@ -48,7 +33,7 @@ impl Render for Event<'_> {
                 }
                 td.body {
                     h1 { (title) }
-                    p { (content) }
+                    p { (PreEscaped(content)) }
                 }
             }
         }
