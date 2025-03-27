@@ -1,11 +1,6 @@
-use std::{cell::RefCell, io::Write, path::Path};
+use std::{io::Write, path::Path};
 
-use comrak::{
-    arena_tree::Node,
-    create_formatter, format_html, markdown_to_html_with_plugins,
-    nodes::{Ast, NodeValue},
-    parse_document, Arena, ExtensionOptions, Plugins,
-};
+use comrak::{create_formatter, nodes::NodeValue, parse_document, Arena, ExtensionOptions};
 use serde::Deserialize;
 
 const EVENTS_DIR: &str = "public/events";
