@@ -15,29 +15,30 @@ body {
 
   > span {
     position: relative;
+    white-space: nowrap;
     z-index: 2;
   }
 
   --rotate-transform: rotate(-1deg);
 
-  div {
+  .highlight, .shadow {
     position: absolute;
     top: 0;
-    bottom: 2px;
-    left: -4px;
-    right: -4px;
+    bottom: .05em;
+    left: -.1em;
+    right: -.1em;
     transform: var(--rotate-transform);
   }
 
-  div.highlight {
-    z-index: 1;
+  .highlight {
+    z-index: 0;
     background-color: var(--theme-accent);
   }
 
-  div.shadow {
-    z-index: 0;
+  .shadow {
+    z-index: -1;
     background-color: var(--theme-accent-dark);
-    transform: var(--rotate-transform) translate(3px, 5px);
+    transform: var(--rotate-transform) translate(.1em, .2em);
   }
 }
 
