@@ -57,7 +57,8 @@ impl Event {
             date: front_matter.start.to_owned(),
             content: {
                 let mut buf = Vec::new();
-                CustomFormatter::format_document(root, &options, &mut buf);
+                CustomFormatter::format_document(root, &options, &mut buf)
+                    .expect("failed to format markdown");
                 String::from_utf8_lossy(&buf).to_string()
             },
         }
