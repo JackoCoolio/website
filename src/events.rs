@@ -1,6 +1,11 @@
-use std::path::Path;
+use std::{cell::RefCell, io::Write, path::Path};
 
-use comrak::{format_html, nodes::NodeValue, parse_document, Arena, ExtensionOptions};
+use comrak::{
+    arena_tree::Node,
+    create_formatter, format_html, markdown_to_html_with_plugins,
+    nodes::{Ast, NodeValue},
+    parse_document, Arena, ExtensionOptions, Plugins,
+};
 use serde::Deserialize;
 
 const EVENTS_DIR: &str = "public/events";
@@ -52,12 +57,22 @@ impl Event {
             date: front_matter.start.to_owned(),
             content: {
                 let mut buf = Vec::new();
-                format_html(root, &options, &mut buf).unwrap();
+                CustomFormatter::format_document(root, &options, &mut buf);
                 String::from_utf8_lossy(&buf).to_string()
             },
         }
     }
 }
+
+create_formatter!(CustomFormatter, {
+    NodeValue::Strong => |context, entering| {
+        if entering {
+            context.write_all(b"<span class=\"highlighted\"><span>")?;
+        } else {
+            context.write_all(b"</span><span class='highlight'></span><span class='shadow'></span></span>")?;
+        }
+    },
+});
 
 #[derive(Deserialize)]
 struct EventFrontMatter<'a> {
