@@ -27,12 +27,17 @@ impl Render for Event {
         } = self;
 
         html! {
-            tr.event {
-                td.timeline {
+            tr.event-header {
+                td {
                     span { (date) }
                 }
-                td.body {
+                td {
                     h1 { (title) }
+                }
+            }
+            tr.event-body {
+                td {}
+                td {
                     p { (PreEscaped(content)) }
                 }
             }
