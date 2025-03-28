@@ -71,6 +71,8 @@ body {
       div#portrait {
         /* circle */
         width: 300px;
+        aspect-ratio: 1;
+
         border-radius: 50%;
 
         background: linear-gradient(var(--theme-accent), var(--theme-accent-dark));
