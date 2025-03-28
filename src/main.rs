@@ -3,6 +3,7 @@ use maud::{html, Markup};
 use tower_http::services::ServeDir;
 
 mod body_pane;
+mod common;
 mod events;
 mod summary_pane;
 

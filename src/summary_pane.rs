@@ -1,5 +1,7 @@
 use maud::{html, Markup};
 
+use crate::common::highlighted;
+
 /// The container for the summary content.
 ///
 /// Takes up the entire space so that the inner content can be aligned correctly.
@@ -53,16 +55,6 @@ fn portrait() -> Markup {
     html! {
         div #portrait {
             img src="portrait-transparent.png";
-        }
-    }
-}
-
-fn highlighted(text: &str) -> Markup {
-    html! {
-        span.highlighted {
-            span { (text) }
-            div.highlight {}
-            div.shadow {}
         }
     }
 }
