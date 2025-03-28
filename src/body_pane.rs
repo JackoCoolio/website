@@ -1,6 +1,9 @@
 use maud::{html, Markup, PreEscaped, Render};
 
-use crate::events::{load_events, Event};
+use crate::{
+    common::highlighted,
+    events::{load_events, Event},
+};
 
 pub fn content() -> Markup {
     let events = load_events();
@@ -22,14 +25,24 @@ impl Render for Event {
     fn render(&self) -> Markup {
         let Event {
             title,
-            date,
+            start,
+            end,
             content,
         } = self;
 
         html! {
             tr.event-header {
                 td {
-                    span { (date) }
+                    p { (start) }
+                    @if let Some(end) = end {
+                        p {
+                            span { "to " }
+                            @match end.as_str() {
+                                "present" => (highlighted("present"))
+                                _ => (end)
+                            }
+                        }
+                    }
                 }
                 td {
                     h1 { (title) }

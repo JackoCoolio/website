@@ -8,7 +8,8 @@ const FRONT_MATTER_DELIMITER: &str = "---";
 
 pub struct Event {
     pub title: String,
-    pub date: String,
+    pub start: String,
+    pub end: Option<String>,
     pub content: String,
 }
 
@@ -49,7 +50,8 @@ impl Event {
 
         Event {
             title: front_matter.title.to_owned(),
-            date: front_matter.start.to_owned(),
+            start: front_matter.start.to_owned(),
+            end: front_matter.end.map(ToOwned::to_owned),
             content: {
                 let mut buf = Vec::new();
                 CustomFormatter::format_document(root, &options, &mut buf)
@@ -74,8 +76,6 @@ create_formatter!(CustomFormatter, {
 struct EventFrontMatter<'a> {
     title: &'a str,
     start: &'a str,
-    // TODO: allow ranges
-    #[expect(dead_code)]
     end: Option<&'a str>,
 }
 
