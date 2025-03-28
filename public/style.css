@@ -53,19 +53,20 @@ body {
   }
 
   #summary {
-    width: fit-content;
-    margin-left: 25px;
+    min-width: fit-content;
+    width: 30%;
 
     display: flex;
-    justify-contents: center;
+    justify-content: center;
+    align-items: center;
 
     /* content */
     > div {
-      margin: auto;
-
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
+
+      margin: 0 50px ;
 
       div#portrait {
         /* circle */
@@ -101,6 +102,13 @@ body {
 
   #events {
     flex-grow: 1;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    /* margin-left: 100px; */
 
     .event-header {
       max-width: 600px;
