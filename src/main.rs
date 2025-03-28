@@ -1,4 +1,7 @@
+use std::net::{IpAddr, SocketAddr};
+
 use axum::{routing::get, Router};
+use clap::{arg, value_parser, Command};
 use maud::{html, Markup};
 use tower_http::services::ServeDir;
 
@@ -9,11 +12,28 @@ mod summary_pane;
 
 #[tokio::main]
 async fn main() {
+    let matches = Command::new("website")
+        .arg(arg!(--host <HOST> "The host to bind to").value_parser(value_parser!(IpAddr)))
+        .arg(arg!(--port <PORT> "The port").value_parser(value_parser!(u16)))
+        .get_matches();
+
+    let Some(host) = matches.get_one("host") else {
+        eprintln!("specify a host with `--host`");
+        std::process::exit(1);
+    };
+
+    let Some(port) = matches.get_one("port") else {
+        eprintln!("specify a port with `--port`");
+        std::process::exit(1);
+    };
+
+    let addr = SocketAddr::new(*host, *port);
+
     let app = Router::new()
         .route("/", get(index))
         .fallback_service(ServeDir::new("public"));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
 
     axum::serve(listener, app.into_make_service())
         .await
