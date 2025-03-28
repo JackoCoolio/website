@@ -42,6 +42,7 @@ fn page(meta: PageMetadata, inner: Markup) -> Markup {
                 meta name="description" content="Jackson Wambolt's personal website";
                 meta name="theme-color" content="#ffffff"; // TODO: set a real color
                 link rel="stylesheet" href="style.css";
+                script src="https://kit.fontawesome.com/c879508e2e.js" crossorigin="anonymous" {}
             }
             body {
                 (inner)

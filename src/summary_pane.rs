@@ -1,4 +1,4 @@
-use maud::{html, Markup};
+use maud::{html, Markup, Render};
 
 use crate::common::highlighted;
 
@@ -47,6 +47,7 @@ fn content() -> Markup {
                     }
                 }
             }
+            (links())
         }
     }
 }
@@ -55,6 +56,40 @@ fn portrait() -> Markup {
     html! {
         div #portrait {
             img src="portrait-transparent.png";
+        }
+    }
+}
+
+struct Link(&'static str, &'static str, &'static str);
+
+impl Render for Link {
+    fn render(&self) -> Markup {
+        let Link(fa_class, alt_title, href) = self;
+        let class = format!("fa-{fa_class}");
+
+        html! {
+            a href=(href) {
+                i.fa-brands.(class) title=(alt_title) {}
+            }
+        }
+    }
+}
+
+const LINKS: &[Link] = &[
+    Link("github", "GitHub", "https://github.com/JackoCoolio"),
+    Link(
+        "linkedin",
+        "LinkedIn",
+        "https://www.linkedin.com/in/jackson-wambolt/",
+    ),
+];
+
+fn links() -> Markup {
+    html! {
+        div #links {
+            @for link in LINKS {
+                (link)
+            }
         }
     }
 }
