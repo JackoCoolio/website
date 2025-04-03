@@ -14,11 +14,8 @@
     flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
       perSystem = {
-        config,
-        self',
         inputs',
         pkgs,
-        system,
         ...
       }: let
         rustToolchainFile = (pkgs.lib.importTOML ./rust-toolchain.toml).toolchain;
@@ -41,6 +38,8 @@
 
         formatter = pkgs.alejandra;
       };
-      flake = {};
+      flake = {
+        nixosModules.website = import ./nixos.nix;
+      };
     };
 }
