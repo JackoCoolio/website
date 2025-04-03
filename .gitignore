@@ -1,1 +1,4 @@
 /target
+
+# ignore testing certificates
+*.pem
