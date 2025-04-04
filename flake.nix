@@ -26,7 +26,26 @@
           }
         );
         rust = rustToolchain.toolchain;
+        cargoTOML = pkgs.lib.importTOML ./Cargo.toml;
       in {
+        packages.default =
+          (pkgs.makeRustPlatform {
+            cargo = rustToolchain.minimalToolchain;
+            rustc = rustToolchain.minimalToolchain;
+          })
+          .buildRustPackage {
+            pname = cargoTOML.package.name;
+            version = cargoTOML.package.version;
+
+            src = ./.;
+
+            cargoLock.lockFile = ./Cargo.lock;
+
+            postInstall = ''
+              cp -r ./public $out
+            '';
+          };
+
         devShells.default = pkgs.mkShell {
           # inputsFrom = [ self'.packages.default ];
           nativeBuildInputs =
