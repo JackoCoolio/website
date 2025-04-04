@@ -1,7 +1,10 @@
-use std::net::{IpAddr, SocketAddr};
+use std::{
+    net::{IpAddr, SocketAddr},
+    path::PathBuf,
+};
 
 use axum::{routing::get, Router};
-use clap::{arg, value_parser, Command};
+use clap::Parser;
 use maud::{html, Markup};
 use tower_http::services::ServeDir;
 
@@ -10,31 +13,24 @@ mod common;
 mod events;
 mod summary_pane;
 
+#[derive(clap::Parser)]
+struct Args {
+    #[arg(long)]
+    host: IpAddr,
+    #[arg(long, short = 'p')]
+    port: u16,
+}
+
 #[tokio::main]
 async fn main() {
-    let matches = Command::new("website")
-        .arg(arg!(--host <HOST> "The host to bind to").value_parser(value_parser!(IpAddr)))
-        .arg(arg!(--port <PORT> "The port").value_parser(value_parser!(u16)))
-        .get_matches();
-
-    let Some(host) = matches.get_one("host") else {
-        eprintln!("specify a host with `--host`");
-        std::process::exit(1);
-    };
-
-    let Some(port) = matches.get_one("port") else {
-        eprintln!("specify a port with `--port`");
-        std::process::exit(1);
-    };
-
-    let addr = SocketAddr::new(*host, *port);
+    let args = Args::parse();
 
     let app = Router::new()
         .route("/", get(index))
         .fallback_service(ServeDir::new("public"));
 
+    let addr = SocketAddr::from((args.host, args.port));
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
