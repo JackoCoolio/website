@@ -8,8 +8,8 @@ sortKey: 2023-08
 After an internship during the summer of 2022, I was offered a full-time
 Software Developer position on the same team I interned with.
 
-Developers at Epic are directly responsible for bringing their projects from an
-idea to reality, so I wear several hats:
+I'm directly responsible for bringing my projects from an idea to reality, so I
+wear several hats:
 
 #### **Researcher**
 - Leading meetings with customer leadership to learn about the problems they and
