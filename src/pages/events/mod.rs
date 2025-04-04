@@ -1,9 +1,10 @@
 use maud::{html, Markup, PreEscaped, Render};
 
-use crate::{
-    common::highlighted,
-    events::{load_events, Event},
-};
+use crate::common::highlighted;
+
+use events::{load_events, Event};
+
+mod events;
 
 pub fn content() -> Markup {
     let mut events = load_events().unwrap_or([].into());
