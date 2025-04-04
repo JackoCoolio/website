@@ -10,7 +10,11 @@
     };
   };
 
-  outputs = inputs @ {flake-parts, ...}:
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    ...
+  }:
     flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
       perSystem = {
@@ -58,7 +62,15 @@
         formatter = pkgs.alejandra;
       };
       flake = {
-        nixosModules.website = import ./nixos.nix;
+        nixosModules.website = {
+          lib,
+          pkgs,
+          ...
+        }: {
+          imports = [./nixos.nix];
+
+          config.wambolt.website.package = lib.mkDefault self.packages.${pkgs.system}.default;
+        };
       };
     };
 }

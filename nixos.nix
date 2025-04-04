@@ -1,10 +1,8 @@
 {
   config,
-  options,
   lib,
   ...
 }: let
-  challengesRoot = "/var/lib/acme/.challenges";
   cfg = config.wambolt.website;
 in {
   options.wambolt.website = {
@@ -56,6 +54,26 @@ in {
         };
       };
     };
+    package = lib.mkOption {
+      type = lib.types.package;
+      description = ''
+        The package to use for the server.
+      '';
+    };
+    bind = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        The address to bind to.
+      '';
+      default = "0.0.0.0";
+    };
+    port = lib.mkOption {
+      type = lib.types.int;
+      description = ''
+        The port to bind HTTP to.
+      '';
+      example = 80;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -66,33 +84,98 @@ in {
         if cfg.acme.useStaging
         then "https://acme-staging-v02.api.letsencrypt.org/directory"
         else "https://acme-v02.api.letsencrypt.org/directory";
-      certs.${cfg.acme.domain} = {
-        webroot = challengesRoot;
-        group = "nginx";
-        extraDomainNames = cfg.acme.extraDomains;
-      };
     };
-
-    users.users.nginx.extraGroups = ["acme"];
 
     services.nginx = {
       enable = true;
-      virtualHosts = {
-        "acmechallenge.${cfg.acme.domain}" = {
-          serverAliases = ["*.${cfg.acme.domain}"];
-          locations."/.well-known/acme-challenge" = {
-            root = challengesRoot;
-          };
+
+      recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+
+      virtualHosts = let
+        base = {
+          forceSSL = true;
           locations."/" = {
-            return = "301 https://$host$request_uri";
+            proxyPass = "http://127.0.0.1:${builtins.toString cfg.port}";
           };
         };
-      };
+      in
+        {
+          "${cfg.acme.domain}" =
+            {
+              enableACME = true;
+              serverAliases = cfg.acme.extraDomains;
+            }
+            // base;
+        }
+        // lib.genAttrs cfg.acme.extraDomains (
+          domain:
+            {
+              useACMEHost = cfg.acme.domain;
+            }
+            // base
+        );
     };
 
-    networking.firewall = {
+    networking.firewall.allowedTCPPorts = [80 443];
+
+    systemd.services.website = {
       enable = true;
-      allowedTCPPorts = [80 443];
+
+      description = "${cfg.acme.domain} web server";
+      wantedBy = ["multi-user.target"];
+      before = ["nginx.service"];
+
+      stopIfChanged = false;
+      startLimitIntervalSec = 60;
+
+      serviceConfig = {
+        # TODO: may be better to let user (me) configure
+        User = "nginx";
+        Group = "nginx";
+
+        ExecStart = ''
+          ${cfg.package}/bin/website \
+            --host ${cfg.bind} \
+            --port ${builtins.toString cfg.port}
+        '';
+
+        Restart = "always";
+        RestartSec = "10s";
+
+        WorkingDirectory = "${cfg.package}/";
+
+        # TODO: maybe cap_sys_resource?
+        AmbientCapabilities = ["CAP_NET_BIND_SERVICE"];
+
+        ProcSubset = "pid";
+        ProtectProc = "invisible";
+
+        UMask = "0027";
+
+        NoNewPrivileges = true;
+
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        PrivateTmp = true;
+        PrivateDevices = true;
+        ProtectHostname = true;
+        ProtectClock = true;
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectKernelLogs = true;
+        ProtectControlGroups = true;
+        RestrictAddressFamilies = ["AF_UNIX" "AF_INET" "AF_INET6"];
+        RestrictNamespaces = true;
+        LockPersonality = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        RemoveIPC = true;
+        PrivateMounts = true;
+
+        SystemCallArchitectures = "native";
+        SystemCallFilter = ["~@cpu-emulation @debug @keyring @mount @obsolete @privileged @setuid"];
+      };
     };
   };
 }
