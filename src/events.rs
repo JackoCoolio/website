@@ -28,7 +28,6 @@ impl Event {
 
         let root = parse_document(&arena, &document, &options);
 
-        println!("parsing {}", path.as_ref().display());
         let front_matter_delim: Vec<_> = FRONT_MATTER_DELIMITER.chars().collect();
 
         // get raw front-matter blob
