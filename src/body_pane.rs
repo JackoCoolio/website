@@ -6,7 +6,8 @@ use crate::{
 };
 
 pub fn content() -> Markup {
-    let events = load_events().unwrap_or([].into());
+    let mut events = load_events().unwrap_or([].into());
+    events.reverse();
 
     html! {
         div #events {
