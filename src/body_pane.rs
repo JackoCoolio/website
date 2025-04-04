@@ -6,7 +6,7 @@ use crate::{
 };
 
 pub fn content() -> Markup {
-    let events = load_events();
+    let events = load_events().unwrap_or([].into());
 
     html! {
         div #events {
@@ -28,6 +28,7 @@ impl Render for Event {
             start,
             end,
             content,
+            ..
         } = self;
 
         html! {

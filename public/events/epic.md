@@ -1,7 +1,8 @@
 ---
 title: Working at Epic Systems in Verona, WI
-start: 2023-08
+start: Aug 2023
 end: present
+sortKey: 2023-08
 ---
 
 After an internship during the summer of 2022, I was offered a full-time

@@ -11,6 +11,7 @@ pub struct Event {
     pub start: String,
     pub end: Option<String>,
     pub content: String,
+    sort_key: String,
 }
 
 impl Event {
@@ -57,6 +58,10 @@ impl Event {
                     .expect("failed to format markdown");
                 String::from_utf8_lossy(&buf).to_string()
             },
+            sort_key: front_matter
+                .sort_key
+                .map(ToOwned::to_owned)
+                .unwrap_or(front_matter.start.to_owned()),
         }
     }
 }
@@ -72,39 +77,48 @@ create_formatter!(CustomFormatter, {
 });
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct EventFrontMatter<'a> {
     title: &'a str,
     start: &'a str,
     end: Option<&'a str>,
+    sort_key: Option<&'a str>,
 }
 
-pub fn load_events() -> impl Iterator<Item = Event> {
-    std::fs::read_dir(EVENTS_DIR)
-        .into_iter()
-        .flat_map(|x| x.into_iter())
-        .flat_map(|x| x.into_iter())
-        .flat_map(|entry| {
-            let Ok(file_type) = entry.file_type() else {
-                // couldn't get file type
-                return None;
-            };
+pub fn load_events() -> Result<Box<[Event]>, ()> {
+    let mut events = Vec::new();
 
-            if !file_type.is_file() {
-                // not a file
-                return None;
-            }
+    let read_dir = std::fs::read_dir(EVENTS_DIR).map_err(|_| ())?;
+    for entry in read_dir {
+        let Ok(entry) = entry else {
+            continue;
+        };
 
-            let file_name = entry.file_name();
-            let Some(file_name) = file_name.to_str() else {
-                // filename isn't UTF-8 - should not happen
-                return None;
-            };
+        let Ok(file_type) = entry.file_type() else {
+            // couldn't get file type
+            continue;
+        };
 
-            if !file_name.ends_with(".md") {
-                // only interested in md files
-                return None;
-            }
+        if !file_type.is_file() {
+            // not a file
+            continue;
+        }
 
-            Some(Event::from_file(entry.path()))
-        })
+        let file_name = entry.file_name();
+        let Some(file_name) = file_name.to_str() else {
+            // filename isn't UTF-8 - should not happen
+            continue;
+        };
+
+        if !file_name.ends_with(".md") {
+            // only interested in md files
+            continue;
+        }
+
+        events.push(Event::from_file(entry.path()));
+    }
+
+    events.sort_by_key(|event| event.sort_key.to_lowercase());
+
+    Ok(events.into_boxed_slice())
 }
