@@ -1,4 +1,7 @@
 /target
 
+# nix output
+/result
+
 # ignore testing certificates
 *.pem
