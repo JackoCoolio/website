@@ -10,6 +10,10 @@ body {
   flex-flow: row nowrap;
 }
 
+code {
+  font-family: DM Mono;
+}
+
 .highlighted {
   position: relative;
 
