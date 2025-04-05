@@ -145,4 +145,13 @@ body {
       }
     }
   }
+
+  #projects {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    max-width: 800px;
+  }
 }
