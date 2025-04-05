@@ -8,17 +8,20 @@ use serde::Deserialize;
 use crate::summary_pane;
 
 pub mod events;
+pub mod projects;
 
 #[derive(Default)]
 pub enum Page {
     #[default] // default to events page
     Events,
+    Projects,
 }
 
 impl Render for Page {
     fn render(&self) -> Markup {
         let (metadata, content) = match self {
             Page::Events => (PageMetadata::default(), events::content()),
+            Page::Projects => (PageMetadata::default(), projects::content()),
         };
 
         page(
@@ -33,7 +36,9 @@ impl Render for Page {
 
 pub fn router() -> Router {
     use axum::routing::get;
-    Router::new().route("/", get(|| async { Page::default().render() }))
+    Router::new()
+        .route("/", get(|| async { Page::default().render() }))
+        .route("/projects", get(|| async { Page::Projects.render() }))
 }
 
 #[derive(Default)]
