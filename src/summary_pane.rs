@@ -37,18 +37,16 @@ impl maud::Render for SummaryField {
 
 fn content() -> Markup {
     html! {
-        div {
-            (portrait())
-            div.text {
-                h1.name { (highlighted("Jackson Wambolt")) }
-                ul.fields {
-                    @for field in FIELDS {
-                        (field)
-                    }
+        (portrait())
+        div.text {
+            h1.name { (highlighted("Jackson Wambolt")) }
+            ul.fields {
+                @for field in FIELDS {
+                    (field)
                 }
             }
-            (links())
         }
+        (links())
     }
 }
 
