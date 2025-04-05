@@ -5,16 +5,32 @@ use comrak::{nodes::NodeValue, Arena};
 use maud::{html, Markup, Render};
 use serde::Deserialize;
 
-use crate::summary_pane;
+use crate::summary_pane::{self, Navigation};
 
 pub mod events;
 pub mod projects;
 
-#[derive(Default)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Page {
     #[default] // default to events page
     Events,
     Projects,
+}
+
+impl Page {
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            Self::Events => "Home",
+            Self::Projects => "Projects",
+        }
+    }
+
+    pub fn href(&self) -> &'static str {
+        match self {
+            Self::Events => "/",
+            Self::Projects => "/projects",
+        }
+    }
 }
 
 impl Render for Page {
@@ -24,10 +40,17 @@ impl Render for Page {
             Page::Projects => (PageMetadata::default(), projects::content()),
         };
 
+        let nav = Navigation {
+            pages: [Page::Events, Page::Projects]
+                .into_iter()
+                .map(|page| (page, page == *self))
+                .collect(),
+        };
+
         page(
             metadata,
             html! {
-                (summary_pane::container())
+                (summary_pane::container(nav))
                 (content)
             },
         )
