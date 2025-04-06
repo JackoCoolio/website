@@ -6,8 +6,8 @@
 
 body {
   background-color: #f2f2f2;
-  display: flex;
-  flex-flow: row nowrap;
+  display: grid;
+  grid-template-columns: 450px auto;
 }
 
 code {
@@ -75,8 +75,7 @@ a {
   }
 
   #summary {
-    min-width: fit-content;
-    width: 30%;
+    width: 350px;
 
     display: flex;
     justify-content: center;
@@ -87,7 +86,7 @@ a {
     flex-flow: column nowrap;
     align-items: center;
 
-    margin: 0 50px ;
+    padding: 0 50px ;
 
     div#portrait {
       /* circle */
