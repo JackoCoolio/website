@@ -162,6 +162,9 @@ a {
   #events {
     flex-grow: 1;
 
+    max-width: 1050px;
+    margin: auto;
+
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
