@@ -9,7 +9,7 @@ mod summary_pane;
 
 #[derive(clap::Parser)]
 struct Args {
-    #[arg(long)]
+    #[arg(long, default_value = "0.0.0.0")]
     host: IpAddr,
     #[arg(long, short = 'p')]
     port: u16,
