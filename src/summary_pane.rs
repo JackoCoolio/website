@@ -59,28 +59,45 @@ fn portrait() -> Markup {
     }
 }
 
-struct Link(&'static str, &'static str, &'static str);
+struct Link {
+    icon: &'static str,
+    alt_text: &'static str,
+    href: &'static str,
+}
 
 impl Render for Link {
     fn render(&self) -> Markup {
-        let Link(fa_class, alt_title, href) = self;
-        let class = format!("fa-{fa_class}");
+        let Link {
+            icon,
+            alt_text,
+            href,
+        } = self;
+        let class = format!("fa-{icon}");
 
         html! {
             a href=(href) {
-                i.fa-brands.(class) title=(alt_title) {}
+                i.fa-brands.(class) title=(alt_text) {}
             }
         }
     }
 }
 
 const LINKS: &[Link] = &[
-    Link("github", "GitHub", "https://github.com/JackoCoolio"),
-    Link(
-        "linkedin",
-        "LinkedIn",
-        "https://www.linkedin.com/in/jackson-wambolt/",
-    ),
+    Link {
+        icon: "github",
+        alt_text: "GitHub",
+        href: "https://github.com/JackoCoolio",
+    },
+    Link {
+        icon: "linkedin",
+        alt_text: "LinkedIn",
+        href: "https://www.linkedin.com/in/jackson-wambolt/",
+    },
+    Link {
+        icon: "file",
+        alt_text: "Resume",
+        href: "/resume.pdf",
+    },
 ];
 
 fn links() -> Markup {
