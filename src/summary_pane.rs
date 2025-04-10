@@ -60,6 +60,7 @@ fn portrait() -> Markup {
 }
 
 struct Link {
+    category: &'static str,
     icon: &'static str,
     alt_text: &'static str,
     href: &'static str,
@@ -68,15 +69,17 @@ struct Link {
 impl Render for Link {
     fn render(&self) -> Markup {
         let Link {
+            category,
             icon,
             alt_text,
             href,
         } = self;
-        let class = format!("fa-{icon}");
+        let category_class = format!("fa-{category}");
+        let icon_class = format!("fa-{icon}");
 
         html! {
             a href=(href) {
-                i.fa-brands.(class) title=(alt_text) {}
+                i.(category_class).(icon_class) title=(alt_text) {}
             }
         }
     }
@@ -84,16 +87,19 @@ impl Render for Link {
 
 const LINKS: &[Link] = &[
     Link {
+        category: "brands",
         icon: "github",
         alt_text: "GitHub",
         href: "https://github.com/JackoCoolio",
     },
     Link {
+        category: "brands",
         icon: "linkedin",
         alt_text: "LinkedIn",
         href: "https://www.linkedin.com/in/jackson-wambolt/",
     },
     Link {
+        category: "solid",
         icon: "file",
         alt_text: "Resume",
         href: "/resume.pdf",
