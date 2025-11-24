@@ -18,8 +18,8 @@ struct SummaryField(&'static str, &'static str);
 
 const FIELDS: &[SummaryField] = &[
     SummaryField("is a", "Software Developer"),
-    SummaryField("at", "Epic"),
-    SummaryField("in", "Madison, WI"),
+    SummaryField("at", "Google"),
+    SummaryField("in", "San Francisco, CA"),
 ];
 
 impl maud::Render for SummaryField {
