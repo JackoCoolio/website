@@ -1,7 +1,7 @@
 ---
 title: Working at Epic Systems in Verona, WI
 start: Aug 2023
-end: Oct 2023
+end: Oct 2025
 sortKey: 2023-08
 ---
 
