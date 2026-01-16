@@ -7,6 +7,8 @@ use serde::Deserialize;
 
 use crate::summary_pane::{self, Navigation};
 
+const GOOGLE_TAG_ID: &str = "AW-17722552646";
+
 pub mod events;
 pub mod projects;
 
@@ -87,6 +89,16 @@ fn page(meta: PageMetadata, inner: Markup) -> Markup {
                 meta name="theme-color" content="#ffffff"; // TODO: set a real color
                 link rel="stylesheet" href="style.css";
                 script src="https://kit.fontawesome.com/c879508e2e.js" crossorigin="anonymous" {}
+                script async src=(format!("https://www.googletagmanager.com/gtag/js?id={}", GOOGLE_TAG_ID)) {}
+                script {
+                    (maud::PreEscaped(format!(r#"
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){{dataLayer.push(arguments);}}
+                        gtag('js', new Date());
+
+                        gtag('config', '{}');
+                    "#, GOOGLE_TAG_ID)))
+                }
             }
             body {
                 (inner)
