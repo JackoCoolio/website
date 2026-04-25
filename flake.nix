@@ -1,6 +1,8 @@
 {
   description = "Personal website";
 
+  nixConfig.allow-import-from-derivation = false;
+
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -22,14 +24,13 @@
         pkgs,
         ...
       }: let
-        rustToolchainFile = (pkgs.lib.importTOML ./rust-toolchain.toml).toolchain;
-        rustToolchain = (
-          inputs'.fenix.packages.fromToolchainName {
-            name = rustToolchainFile.channel;
-            sha256 = "sha256-VZZnlyP69+Y3crrLHQyJirqlHrTtGTsyiSnZB8jEvVo=";
-          }
-        );
-        rust = rustToolchain.toolchain;
+        rustToolchain = inputs'.fenix.packages.stable;
+        rust = rustToolchain.withComponents [
+          "cargo"
+          "rustc"
+          "rust-src"
+          "rust-std"
+        ];
         cargoTOML = pkgs.lib.importTOML ./Cargo.toml;
       in {
         packages.default =
